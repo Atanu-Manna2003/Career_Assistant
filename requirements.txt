@@ -11,3 +11,4 @@ werkzeug>=2.0.0
 reportlab
 python-docx
 langchain-groq
+gunicorn
