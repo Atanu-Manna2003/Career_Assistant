@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Assistant - Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4cb5ae;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gradient-start: #4a6fa5;
+      --gradient-end: #166088;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1800&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(76, 181, 174, 0.85) 0%, rgba(22, 96, 136, 0.9) 100%);
+      z-index: -1;
+    }
+    
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+      padding: 20px;
+    }
+    
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      width: 100%;
+      max-width: 450px;
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .login-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .login-header h2 {
+      color: var(--secondary);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    
+    .login-header p {
+      color: #6c757d;
+      font-size: 1.1rem;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    
+    .form-control {
+      padding: 12px 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.25rem rgba(76, 181, 174, 0.25);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      transform: translateY(-2px);
+    }
+    
+    .login-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(76, 181, 174, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--accent);
+      font-size: 28px;
+    }
+    
+    .login-links {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .login-links a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .login-links a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    
+    .footer {
+      background: rgba(52, 58, 64, 0.9);
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: auto;
+      backdrop-filter: blur(5px);
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .login-card {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .login-card {
+        padding: 20px;
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-briefcase me-2"></i>Career Assistant
+      </a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-icon">
+          <i class="fas fa-user-lock"></i>
+        </div>
+        <h2>Welcome Back</h2>
+        <p>Sign in to access your career dashboard</p>
+      </div>
+      
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt me-2"></i>Login
+        </button>
+        
+        <div class="login-links">
+          <a href="{{ url_for('register') }}">Create an account</a>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-0">© 2025 Career Assistant. Helping you find your next opportunity.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Assistant</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4cb5ae;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gradient-start: #4a6fa5;
+      --gradient-end: #166088;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1800&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(76, 181, 174, 0.85) 0%, rgba(22, 96, 136, 0.9) 100%);
+      z-index: -1;
+    }
+    
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .container {
+      flex: 1;
+    }
+    
+    .login-promo {
+      background: rgba(255, 255, 255, 0.9);
+      border-left: 4px solid var(--accent);
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    
+    .login-promo i {
+      color: var(--accent);
+      font-size: 24px;
+      margin-right: 15px;
+    }
+    
+    .login-promo p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+    
+    .login-promo strong {
+      color: var(--secondary);
+    }
+    
+    .footer {
+      background: rgba(52, 58, 64, 0.9);
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+      backdrop-filter: blur(5px);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .login-promo {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .login-promo i {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      
+      body {
+        background-attachment: scroll;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <i class="fas fa-briefcase me-2"></i>Career Assistant
+      </a>
+      <div class="collapse navbar-collapse">
+       <!-- In your navbar, add this to the list of navigation items -->
+<ul class="navbar-nav ms-auto">
+  {% if session.get('user_id') %}
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url_for('chatbot') }}">
+        <i class="fas fa-robot me-1"></i>AI Assistant
+      </a>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+  {% else %}
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+  {% endif %}
+</ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    {% if not session.get('user_id') %}
+    <div class="login-promo">
+      <i class="fas fa-rocket"></i>
+      <p><strong>Save your search progress and unlock more features by Login in! </strong> </p>
+    </div>
+    {% endif %}
+    
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-0">© 2025 Career Assistant. Helping you find your next opportunity.</p>
+    </div>
+  </footer>
+</body>
+</html>

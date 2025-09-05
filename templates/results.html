@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Assistant - Job Results</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4cb5ae;
+      --success: #28a745;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gradient-start: #4a6fa5;
+      --gradient-end: #166088;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1800&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(76, 181, 174, 0.85) 0%, rgba(22, 96, 136, 0.9) 100%);
+      z-index: -1;
+    }
+    
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .container {
+      flex: 1;
+    }
+    
+    .results-header {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    
+    .results-header h2 {
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    
+    .results-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .job-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 25px;
+      margin-bottom: 20px;
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .job-title {
+      color: var(--secondary);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .company-name {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    
+    .job-location {
+      color: #6c757d;
+      margin-bottom: 15px;
+    }
+    
+    .job-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .btn-view {
+      background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+    
+    .btn-view:hover {
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      transform: translateY(-2px);
+      color: white;
+    }
+    
+    .btn-save {
+      background: linear-gradient(to right, var(--success), #20c997);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+    
+    .btn-save:hover {
+      background: linear-gradient(to right, #218838, var(--success));
+      transform: translateY(-2px);
+      color: white;
+    }
+    
+    .btn-generate {
+      background: linear-gradient(to right, #6f42c1, #d63384);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+    
+    .btn-generate:hover {
+      background: linear-gradient(to right, #5a32a3, #b52a6f);
+      transform: translateY(-2px);
+      color: white;
+    }
+    
+    .report-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 25px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .report-section h3 {
+      color: var(--secondary);
+      font-weight: 700;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 10px;
+    }
+    
+    .report-content {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.5;
+    }
+    
+    .generation-form {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 25px;
+      margin-top: 30px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    
+    .form-control {
+      padding: 12px 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.25rem rgba(76, 181, 174, 0.25);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 8px;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(to right, var(--secondary), var(--primary));
+      transform: translateY(-2px);
+    }
+    
+    .footer {
+      background: rgba(52, 58, 64, 0.9);
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+      backdrop-filter: blur(5px);
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .job-card, .report-section, .generation-form {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .job-actions {
+        flex-direction: column;
+      }
+      
+      .btn-view, .btn-save, .btn-generate {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <i class="fas fa-briefcase me-2"></i>Career Assistant
+      </a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          {% if session.get('user_id') %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="results-header">
+      <h2>Job Matching Results</h2>
+      <p>We found these opportunities that match your profile</p>
+    </div>
+  <!-- ADD THE CHATBOT BUTTON RIGHT HERE -->
+  <!-- <div class="text-center mb-4">
+    <a href="{{ url_for('chatbot') }}" class="btn btn-primary btn-lg">
+      <i class="fas fa-robot me-2"></i>
+    </a>
+    <p class="mt-2 text-white"></p>
+  </div> -->
+    {% if jobs %}
+      {% for job in jobs %}
+      <div class="job-card">
+        <h3 class="job-title">{{ job['job_title'] }}</h3>
+        <p class="company-name">{{ job['employer_name'] }}</p>
+        <p class="job-location">{{ job['job_city'] }}, {{ job['job_state'] }}</p>
+        
+        <div class="job-actions">
+          <a href="{{ job['job_apply_link'] }}" target="_blank" class="btn-view">
+            <i class="fas fa-external-link-alt me-1"></i> View Job
+          </a>
+          <form method="POST" action="{{ url_for('save_job', job_id=job['job_id']) }}">
+  <input type="hidden" name="job_title" value="{{ job['job_title'] }}">
+  <input type="hidden" name="company" value="{{ job['employer_name'] }}">
+  <input type="hidden" name="job_url" value="{{ job['job_apply_link'] }}">
+  <button type="submit" class="btn-save">
+    <i class="fas fa-bookmark me-1"></i> Save Job
+  </button>
+</form>
+
+          <!-- <a href="#generation-{{ loop.index }}" class="">
+            <i class="fas fa-magic me-1"></i> 
+          </a> -->
+        </div>
+        
+        <!-- Generation form for this specific job -->
+        <div class="generation-form" id="generation-{{ loop.index }}">
+          <h4>Enhance Your Application for {{ job['job_title'] }}</h4>
+          <form method="POST" action="{{ url_for('generate_resume') }}">
+            <input type="hidden" name="job_desc" value="{{ job['job_title'] }} at {{ job['employer_name'] }} - {{ job['job_description'] }}">
+            <input type="hidden" name="resume_text" value="{{ resume_text }}">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-file-alt me-2"></i>Generate Improved Resume
+            </button>
+          </form>
+          
+          <form method="POST" action="{{ url_for('generate_cover_letter_route') }}" class="mt-3">
+            <input type="hidden" name="job_desc" value="{{ job['job_title'] }} at {{ job['employer_name'] }} - {{ job['job_description'] }}">
+            <input type="hidden" name="resume_text" value="{{ resume_text }}">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-envelope me-2"></i>Generate Cover Letter
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="job-card text-center">
+      
+        <p>Try adjusting your search criteria or upload a different resume.</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Search</a>
+      </div>
+    {% endif %}
+
+    <!-- {% if ats %}
+    <div class="report-section">
+      <h3><i class="fas fa-chart-bar me-2"></i>ATS Report</h3>
+      <div class="report-content">{{ ats }}</div>
+    </div>
+    {% endif %} -->
+
+    {% if improved_resume %}
+    <div class="report-section">
+      <h3><i class="fas fa-file-alt me-2"></i>Improved Resume</h3>
+      <div class="report-content">{{ improved_resume }}</div>
+    </div>
+    {% endif %}
+
+    {% if cover_letter %}
+    <div class="report-section">
+      <h3><i class="fas fa-envelope me-2"></i>Cover Letter</h3>
+      <div class="report-content">{{ cover_letter }}</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-0">© 2025 Career Assistant. Helping you find your next opportunity.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for generation forms
+    document.querySelectorAll('.btn-generate').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        document.querySelector(targetId).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>

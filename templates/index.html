@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+  }
+  
+  .search-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    width: 100%;
+    max-width: 600px;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .search-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  }
+  
+  .search-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .search-header h2 {
+    color: #166088;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .search-header p {
+    color: #6c757d;
+    font-size: 1.1rem;
+  }
+  
+  .form-label {
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 8px;
+  }
+  
+  .form-control {
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+  
+  .form-control:focus {
+    border-color: #4cb5ae;
+    box-shadow: 0 0 0 0.25rem rgba(76, 181, 174, 0.25);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(to right, #4a6fa5, #166088);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(to right, #166088, #4a6fa5);
+    transform: translateY(-2px);
+  }
+  
+  .file-upload-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 5px;
+  }
+  
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(76, 181, 174, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #4cb5ae;
+    font-size: 24px;
+  }
+  
+  .search-card {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .search-card {
+      padding: 20px;
+      margin: 20px;
+    }
+  }
+</style>
+
+<div class="search-container">
+  <div class="search-card">
+    <div class="search-header">
+      <div class="feature-icon">
+        <i class="fas fa-search"></i>
+      </div>
+      <h2>Find Your Dream Job</h2>
+      <p>Upload your resume, let us find the right jobs for you.</p>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label">Job Title</label>
+        <input type="text" name="job_title" class="form-control" placeholder="e.g. Software Engineer" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input type="text" name="location" class="form-control" placeholder="e.g. New York, Remote" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Upload Resume</label>
+        <input type="file" name="resume" class="form-control" required>
+        <div class="file-upload-info">
+          <small>Accepted formats: PDF, DOC, DOCX. Max size: 5MB</small>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search me-2"></i>Search Jobs
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
