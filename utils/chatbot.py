@@ -1,23 +1,13 @@
 import os
-from typing import List, Dict
+from typing import Dict
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
+
 load_dotenv()
-# Load environment variables
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
-# Initialize Groq LLM
-LLM = ChatGroq(
-    model=GROQ_MODEL,
-    api_key=GROQ_API_KEY,
-    temperature=0.6
-)
-
-# Update your chatbot prompt for better responses
-# Update your chatbot prompt for better responses
+# Prompt template (lightweight, safe to keep at import time)
 chatbot_prompt = PromptTemplate(
     input_variables=["resume_text", "user_query"],
     template=(
@@ -44,24 +34,26 @@ Answer in a helpful, professional tone:"""
     ),
 )
 
-# Create the chain
-chatbot_chain = LLMChain(llm=LLM, prompt=chatbot_prompt)
+def get_chatbot_chain() -> LLMChain:
+    """Create the LLMChain only when called (lazy loading)."""
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+    GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
-# Wrapper
+    llm = ChatGroq(
+        model=GROQ_MODEL,
+        api_key=GROQ_API_KEY,
+        temperature=0.6
+    )
+
+    return LLMChain(llm=llm, prompt=chatbot_prompt)
+
 def ask_chatbot(resume_text: str, user_query: str) -> str:
     """
-    Ask chatbot a question based on resume .
-   
+    Ask chatbot a question based on resume.
+    Model loads only when this function is called.
     """
-    # Format jobs as text
-    # jobs_text = "\n".join(
-    #     [f"{i+1}. {job.get('title')} at {job.get('company')}\n{job.get('description')}"
-    #      for i, job in enumerate(jobs)]
-    # )
-
-    return chatbot_chain.run({
+    chain = get_chatbot_chain()
+    return chain.run({
         "resume_text": resume_text[:4000],  # safety limit
-        # "jobs": jobs_text[:6000],
         "user_query": user_query
     })
-
