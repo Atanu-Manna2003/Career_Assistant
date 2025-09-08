@@ -4,14 +4,22 @@ from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 
-# ----------------------------
-# PROMPTS (lightweight)
-# ----------------------------
+# Load environment variables
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
+# Initialize Groq LLM
+LLM = ChatGroq(
+    model=GROQ_MODEL,
+    api_key=GROQ_API_KEY,
+    temperature=0.7
+)
+
+# Resume improvement prompt (ATS-aware)
 resume_prompt = PromptTemplate(
     input_variables=["resume_text", "job_description"],
     template=(
-       """You are an expert resume writer and ATS optimizer.  
+       """ You are an expert resume writer and ATS optimizer.  
 Your task is to create a complete professional resume from the provided candidate details and job description.  
 The output must strictly follow the structured format below.
 
@@ -68,6 +76,9 @@ Job Description:
     ),
 )
 
+resume_chain = LLMChain(llm=LLM, prompt=resume_prompt)
+
+# Cover letter prompt
 cover_prompt = PromptTemplate(
     input_variables=["resume_text", "job_description"],
     template=(
@@ -79,29 +90,11 @@ cover_prompt = PromptTemplate(
     ),
 )
 
-# ----------------------------
-# Lazy loader for Groq
-# ----------------------------
-def get_llm():
-    """Initialize Groq LLM only when needed."""
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-    GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+cover_chain = LLMChain(llm=LLM, prompt=cover_prompt)
 
-    return ChatGroq(
-        model=GROQ_MODEL,
-        api_key=GROQ_API_KEY,
-        temperature=0.7
-    )
-
-# ----------------------------
-# Wrappers
-# ----------------------------
+# Helper wrappers
 def generate_resume_improvement(resume_text: str, job_description: str) -> str:
-    llm = get_llm()
-    resume_chain = LLMChain(llm=llm, prompt=resume_prompt)
     return resume_chain.run({"resume_text": resume_text, "job_description": job_description})
 
 def generate_cover_letter(resume_text: str, job_description: str) -> str:
-    llm = get_llm()
-    cover_chain = LLMChain(llm=llm, prompt=cover_prompt)
     return cover_chain.run({"resume_text": resume_text, "job_description": job_description})
